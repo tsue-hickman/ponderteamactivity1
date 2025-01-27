@@ -2,14 +2,6 @@ import { getLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
-
-  // console.log("cartItems:", cartItems);
-
-  if (!Array.isArray(cartItems)) {
-    // console.error("cartItems is not an array!", cartItems);
-    return;
-  }
-
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
 }

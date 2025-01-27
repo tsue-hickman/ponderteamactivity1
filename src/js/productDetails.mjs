@@ -1,13 +1,7 @@
-// productDetails.mjs
- 
 import { findProductById } from "./productData.mjs";
 import { setLocalStorage } from "./utils.mjs";
  
 let product = {};
- 
-// function addToCart() {
-//   setLocalStorage("so-cart", product);
-// }
  
 function renderProductDetails() {
   document.getElementById("productName").innerText = product.Brand.Name;
@@ -19,16 +13,20 @@ function renderProductDetails() {
   document.getElementById("productDescriptionHtmlSimple").innerHTML = product.DescriptionHtmlSimple;
   document.getElementById("addToCart").dataset.id = product.Id;
 }
- 
+
+function addProductToCart() {
+  setLocalStorage("so-cart", product);
+}
+
 export async function productDetails(productId) {
-  // First, use findProductById to get the details for the current product
+  // findProductById to get details for the current product
   try {
     product = await findProductById(productId);
-    // Once we have the product details we can render out the HTML
+    // render HTML based on product
     renderProductDetails();
-    // Add a listener to Add to Cart button
+    // listener for Add to Cart button
     document.getElementById("addToCart")
-      .addEventListener("click", addToCart);
+      .addEventListener("click", addProductToCart);
   } catch (err) {
     console.log("Error loading product details:", err);
   }
