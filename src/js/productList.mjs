@@ -1,37 +1,58 @@
-// productList.mjs
+import { getData } from "../js/productData.mjs";
+import { renderListWithTemplate } from "../js/utils.mjs"; // Import the new reusable function
 
-// Sample data-fetching function (you can replace it with your actual API call)
-export async function fetchProducts() {
+// Template function to create HTML for each product
+function productCardTemplate(product) {
+  return `<li class="product-card">
+    <a href="product_pages/index.html?product=${product.Id}">
+      <img src="${product.Image}" alt="Image of ${product.Name}" />
+      <h3 class="card__brand">${product.Brand.Name}</h3>
+      <h2 class="card__name">${product.Name}</h2>
+      <p class="product-card__price">$${product.FinalPrice}</p>
+    </a>
+  </li>`;
+}
+
+// Filter to show only 4 products
+function getTopFourTents(products) {
+  return products.slice(0, 4); // Return the first 4 products
+}
+
+// Fetch products by category and display them
+export default async function productList(selector, category) {
   try {
-    const response = await fetch('https://api.example.com/products'); // Replace with your actual API endpoint
+    // Fetch products for the specified category
+    const products = await getData(category); 
+
+    // Filter the products to show only the top 4 tents
+    const topFourTents = getTopFourTents(products);
+
+    // Get the container element
+    const productContainer = document.getElementById(selector);
+
+    // Use the reusable render function to render the products
+    renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
+    
+  } catch (error) {
+    // console.error("Error fetching products:", error);
+  }
+}
+
+// Sample fetch function (can be used in other parts of the app)
+async function fetchProducts() {
+  try {
+    const response = await fetch("https://api.example.com/products"); // Example API endpoint
     const data = await response.json();
     return data; // Assuming the data is in JSON format
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return []; // Return an empty array in case of error
+    // console.error("Error fetching products:", error);
+    return []; // Return empty array in case of error
   }
 }
 
-// Main function to handle product list display
-export default async function productList() {
-  const products = await fetchProducts();
+// Example of calling the fetchProducts function
+fetchProducts().then(products => {
   
-  // Assuming you want to dynamically display products on the webpage
-  const productContainer = document.getElementById('product-list');
-  
-  if (products.length === 0) {
-    productContainer.innerHTML = 'No products available';
-  } else {
-    const productHTML = products.map(product => {
-      return `
-        <div class="product-item">
-          <h3>${product.name}</h3>
-          <p>${product.description}</p>
-          <p>Price: $${product.price}</p>
-        </div>
-      `;
-    }).join('');
-    
-    productContainer.innerHTML = productHTML;
-  }
-}
+  // console.log(products); // Handle the products here
+});
+
