@@ -5,7 +5,8 @@ function renderCartContents() {
   const productList = document.querySelector(".product-list");
 
   if (cartItems.length === 0) {
-    productList.innerHTML = "<p>Your cart is empty! Add items to view them in cart.</p>";
+    productList.innerHTML =
+      "<p>Your cart is empty! Add items to view them in cart.</p>";
   } else {
     const htmlItems = cartItems.map((item) => cartItemTemplate(item));
     productList.innerHTML = htmlItems;
