@@ -13,6 +13,22 @@
   --small-font: 0.8em;
   --large-font: 1.2em;
 }
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -108,6 +124,10 @@ button {
 }
 .cart:hover svg {
   fill: gray;
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
 }
 
 /* End cart icon styles */
