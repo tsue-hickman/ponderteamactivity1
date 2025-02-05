@@ -43,3 +43,28 @@ export function renderListWithTemplate(templateFn, parentElement, list, position
   const htmlStrings = list.map(templateFn); // Generate HTML for each item using the template function
   parentElement.insertAdjacentHTML(position, htmlStrings.join("")); // Insert the HTML into the DOM
 }
+
+
+export function renderWithTemplate(templateFn, parentElement, list, position = "afterbegin", clear = true) {
+  if (clear) {
+    parentElement.innerHTML = ""; // Clear the parent element
+  }
+  parentElement.insertAdjacentHTML(position, htmlStrings.join("")); // Insert the HTML into the DOM
+  if (callback) {
+    callback(data);
+  }
+}
+
+function loadTemplate(path) {
+  return async function () {
+      const res = await fetch(path);
+      if (res.ok) {
+      const html = await res.text();
+      return html;
+      }
+  };
+}
+
+function loadHeaderFooter {
+  
+}
