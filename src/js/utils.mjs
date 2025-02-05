@@ -10,12 +10,13 @@ export function getLocalStorage(key) {
 
 // save data to local storage
 export function setLocalStorage(key, data) {
-  let existingCart = JSON.parse(localStorage.getItem(key)) || [];
-  if (!Array.isArray(existingCart)) {
-    existingCart = [];
-  }
-  existingCart.push(data);
-  localStorage.setItem(key, JSON.stringify(existingCart));
+  localStorage.setItem(key, JSON.stringify(data));
+  // let existingCart = JSON.parse(localStorage.getItem(key)) || [];
+  // if (!Array.isArray(existingCart)) {
+  //   existingCart = [];
+  // }
+  // existingCart.push(data);
+  // localStorage.setItem(key, JSON.stringify(existingCart));
 }
 
 // set a listener for both touchend and click
