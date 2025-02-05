@@ -3,10 +3,10 @@ import { setLocalStorage } from "./utils.mjs";
 
 let product = {};
 
-function calculateDiscount(product) {
-  if (product.SuggestedRetailPrice && product.FinalPrice) {
-    const suggestedPrice = parseFloat(product.SuggestedRetailPrice);
-    const finalPrice = parseFloat(product.FinalPrice);
+function calculateDiscount(prod) {
+  if (prod.SuggestedRetailPrice && prod.FinalPrice) {
+    const suggestedPrice = parseFloat(prod.SuggestedRetailPrice);
+    const finalPrice = parseFloat(prod.FinalPrice);
     if (suggestedPrice > finalPrice) {
       const discount = ((suggestedPrice - finalPrice) / suggestedPrice) * 100;
       return Math.round(discount);
@@ -29,9 +29,9 @@ function renderProductDetails() {
   const discount = calculateDiscount(product);
   const priceDisplay = document.getElementById("productFinalPrice");
   priceDisplay.innerHTML = `
-    ${discount > 0 ? `<span class="discount-tag">-${discount}%</span>` : ''}
+    ${discount > 0 ? `<span class="discount-tag">-${discount}%</span>` : ""}
     <span class="current-price">${formatPrice(product.FinalPrice)}</span>
-    ${discount > 0 ? `<span class="original-price">${formatPrice(product.SuggestedRetailPrice)}</span>` : ''}
+    ${discount > 0 ? `<span class="original-price">${formatPrice(product.SuggestedRetailPrice)}</span>` : ""}
   `;
 
   document.getElementById("productColorName").innerText = product.Colors[0].ColorName;
@@ -41,16 +41,16 @@ function renderProductDetails() {
 
 async function loadAlerts() {
   try {
-    const response = await fetch('../json/alerts.json');
+    const response = await fetch("../json/alerts.json");
     const data = await response.json();
-    const alertContainer = document.createElement('div');
-    alertContainer.className = 'alert-container';
+    const alertContainer = document.createElement("div");
+    alertContainer.className = "alert-container";
 
     data.alerts
       .filter(alert => alert.active)
       .forEach(alert => {
-        const alertElement = document.createElement('div');
-        alertElement.className = 'alert';
+        const alertElement = document.createElement("div");
+        alertElement.className = "alert";
         alertElement.textContent = alert.message;
         alertElement.style.backgroundColor = alert.background;
         alertElement.style.color = alert.color;
@@ -58,10 +58,10 @@ async function loadAlerts() {
       });
 
     // Insert alerts at the top of the main content
-    const mainContent = document.querySelector('main');
+    const mainContent = document.querySelector("main");
     mainContent.insertBefore(alertContainer, mainContent.firstChild);
   } catch (err) {
-    console.log('Error loading alerts:', err);
+    // console.log("Error loading alerts:", err);
   }
 }
 
@@ -81,6 +81,6 @@ export async function productDetails(productId) {
     document.getElementById("addToCart")
       .addEventListener("click", addProductToCart);
   } catch (err) {
-    console.log("Error loading product details:", err);
+    // console.log("Error loading product details:", err);
   }
 }
