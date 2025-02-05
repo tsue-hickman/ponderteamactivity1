@@ -133,6 +133,20 @@ button {
   text-decoration: none;
   color: var(--dark-grey);
 }
+
+/* Alert Styles */
+.alert-container {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.alert {
+  padding: 1em;
+  margin: 0.5em 0;
+  border-radius: 4px;
+  text-align: center;
+}
+
 /* Styles for product lists */
 .product-card {
   flex: 1 1 45%;
@@ -149,15 +163,13 @@ button {
 }
 
 .discount-tag {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background-color: var(--secondary-color);
   color: white;
   padding: 0.3em 0.6em;
   border-radius: 3px;
   font-size: var(--small-font);
   font-weight: bold;
+  margin-right: 0.5em;
 }
 
 .original-price {
@@ -166,6 +178,12 @@ button {
   font-size: var(--small-font);
   margin-top: -0.5em;
   opacity: 0.7;
+}
+
+.current-price {
+  font-size: var(--large-font);
+  color: var(--secondary-color);
+  font-weight: bold;
 }
 
 .product-card__price {
