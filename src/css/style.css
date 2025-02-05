@@ -220,6 +220,7 @@ button {
   font-size: var(--small-font);
   /* max-height: 120px; */
   align-items: center;
+  position: relative;
 }
 
 .cart-card__image {
@@ -248,6 +249,27 @@ button {
   grid-row: 2;
   grid-column: 3;
 }
+
+/* Start cart card x icon styling */
+
+.remove-from-cart {
+  cursor: pointer;
+  font-size: 10rem;
+  color: red;
+  font-weight: normal;
+  border: none;
+  background: none;
+  padding: 0 8px;
+  display: inline-block;
+  position: absolute; /* Positioned relative to .cart-card */
+  top: 5px; /* Distance from the top */
+  left: 750px; /* Distance from the right */
+}
+
+.remove-from-cart:hover {
+  color: darkred;
+}
+
 
 @media screen and (min-width: 500px) {
   body {

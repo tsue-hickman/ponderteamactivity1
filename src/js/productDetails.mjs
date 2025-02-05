@@ -1,5 +1,5 @@
 import { findProductById } from "./productData.mjs";
-import { setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
  
 let product = {};
  
@@ -14,8 +14,13 @@ function renderProductDetails() {
   document.getElementById("addToCart").dataset.id = product.Id;
 }
 
-function addProductToCart() {
-  setLocalStorage("so-cart", product);
+function addProductToCart(product) {
+  let cartItems = getLocalStorage("so-cart") || [];
+  if (!Array.isArray(cartItems)) {
+    cartItems = [];
+  }
+  cartItems.push(product);
+  setLocalStorage("so-cart", cartItems);
 }
 
 export async function productDetails(productId) {
@@ -26,7 +31,7 @@ export async function productDetails(productId) {
     renderProductDetails();
     // listener for Add to Cart button
     document.getElementById("addToCart")
-      .addEventListener("click", addProductToCart);
+      .addEventListener("click", () => addProductToCart(product));
   } catch (err) {
     console.log("Error loading product details:", err);
   }
