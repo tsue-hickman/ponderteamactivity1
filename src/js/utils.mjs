@@ -45,26 +45,47 @@ export function renderListWithTemplate(templateFn, parentElement, list, position
 }
 
 
-export function renderWithTemplate(templateFn, parentElement, list, position = "afterbegin", clear = true) {
+export function renderWithTemplate(template, parentElement, list, position = "afterbegin", clear = true) {
   if (clear) {
     parentElement.innerHTML = ""; // Clear the parent element
   }
-  parentElement.insertAdjacentHTML(position, htmlStrings.join("")); // Insert the HTML into the DOM
-  if (callback) {
-    callback(data);
+  parentElement.insertAdjacentHTML(position, template);
+}
+
+async function loadTemplate(path) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Failed to load ${path}: ${res.statusText}`);
+
+    const text = await res.text();
+    if (!text.trim()) throw new Error(`${path} is empty.`);
+
+    return text;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return "";
   }
 }
 
-function loadTemplate(path) {
-  return async function () {
-      const res = await fetch(path);
-      if (res.ok) {
-      const html = await res.text();
-      return html;
-      }
-  };
-}
+export async function loadHeaderFooter() {
+  const headerHTML = await loadTemplate("/partials/header.html");
+  const footerHTML = await loadTemplate("/partials/footer.html");
 
-function loadHeaderFooter {
-  
+  console.log("Header HTML:", headerHTML); // Debugging
+  console.log("Footer HTML:", footerHTML); // Debugging
+
+  const header = document.getElementById("header");
+  const footer = document.getElementById("footer");
+
+  if (header && headerHTML.trim()) {
+    header.innerHTML = headerHTML;
+  } else {
+    console.error("Header not found in DOM or is empty.");
+  }
+
+  if (footer && footerHTML.trim()) {
+    footer.innerHTML = footerHTML;
+  } else {
+    console.error("Footer not found in DOM or is empty.");
+  }
 }
