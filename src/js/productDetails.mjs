@@ -1,6 +1,6 @@
 import { findProductById } from "./productData.mjs";
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-
+import { setLocalStorage } from "./utils.mjs";
+ 
 let product = {};
 
 function calculateDiscount(prod) {

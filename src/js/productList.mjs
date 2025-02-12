@@ -1,4 +1,3 @@
-// productList.mjs
 import { getData } from "../js/productData.mjs";
 import { renderListWithTemplate } from "../js/utils.mjs";
 
@@ -11,7 +10,7 @@ function calculateDiscount(originalPrice, finalPrice) {
 function productCardTemplate(product) {
   const discount = calculateDiscount(product.SuggestedRetailPrice, product.FinalPrice);
   const discountTag = discount > 0 ? `<p class="discount-tag">${discount}% Off</p>` : "";
-  
+
   return `<li class="product-card">
     <a href="product_pages/index.html?product=${product.Id}">
       <img src="${product.Image}" alt="Image of ${product.Name}" />
@@ -28,8 +27,14 @@ function getTopFourTents(products) {
   return products.slice(0, 4);
 }
 
-export default async function productList(selector, category) {
+export default async function productList(selector, category = null) {
   try {
+    // Get category from URL parameters if not provided
+    if (!category) {
+      const params = new URLSearchParams(window.location.search);
+      category = params.get("category") || "defaultCategory"; // Provide a fallback if needed
+    }
+
     const products = await getData(category);
     const topFourTents = getTopFourTents(products);
     const productContainer = document.querySelector(selector);
