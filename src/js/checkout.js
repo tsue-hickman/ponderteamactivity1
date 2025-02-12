@@ -1,9 +1,7 @@
-//main.js
-import productList from "./productList.mjs";
+//checkout.js
 import { loadHeaderFooter } from "./utils.mjs";
 
 // Call the productList function when the page loads
 window.addEventListener("DOMContentLoaded", () => {
-  productList(".product-list", "tents");
   loadHeaderFooter();
 });

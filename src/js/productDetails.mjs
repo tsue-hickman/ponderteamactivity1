@@ -1,6 +1,6 @@
 import { findProductById } from "./productData.mjs";
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-
+import { setLocalStorage } from "./utils.mjs";
+ 
 let product = {};
 
 function calculateDiscount(prod) {
@@ -79,7 +79,7 @@ export async function productDetails(productId) {
     renderProductDetails();
     
     document.getElementById("addToCart")
-      .addEventListener("click", addProductToCart);
+      .addEventListener("click", () => addProductToCart(product));
   } catch (err) {
     // console.log("Error loading product details:", err);
   }
