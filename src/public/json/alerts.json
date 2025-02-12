@@ -1,0 +1,16 @@
+{
+  "alerts": [
+    {
+      "message": "Save up to $100 on select Marmot tents!",
+      "background": "#edf2f7",
+      "color": "#2d3748",
+      "active": true
+    },
+    {
+      "message": "Free shipping on orders over $99!",
+      "background": "#ebf8ff",
+      "color": "#2c5282",
+      "active": true
+    }
+  ]
+}
