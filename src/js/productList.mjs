@@ -32,7 +32,7 @@ export default async function productList(selector, category) {
   try {
     const products = await getData(category);
     const topFourTents = getTopFourTents(products);
-    const productContainer = document.getElementById(selector);
+    const productContainer = document.querySelector(selector);
     renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
   } catch (error) {
     // console.error("Error fetching products:", error);

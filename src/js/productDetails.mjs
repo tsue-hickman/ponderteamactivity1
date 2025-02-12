@@ -39,6 +39,7 @@ function renderProductDetails() {
   document.getElementById("addToCart").dataset.id = product.Id;
 }
 
+
 async function loadAlerts() {
   try {
     const response = await fetch("../json/alerts.json");
@@ -65,8 +66,13 @@ async function loadAlerts() {
   }
 }
 
-function addProductToCart() {
-  setLocalStorage("so-cart", product);
+function addProductToCart(product) {
+  let cartItems = getLocalStorage("so-cart") || [];
+  if (!Array.isArray(cartItems)) {
+    cartItems = [];
+  }
+  cartItems.push(product);
+  setLocalStorage("so-cart", cartItems);
 }
 
 export async function productDetails(productId) {
@@ -79,7 +85,7 @@ export async function productDetails(productId) {
     renderProductDetails();
     
     document.getElementById("addToCart")
-      .addEventListener("click", addProductToCart);
+      .addEventListener("click", () => addProductToCart(product));
   } catch (err) {
     // console.log("Error loading product details:", err);
   }
