@@ -110,6 +110,9 @@ button {
 .divider {
   border-bottom: 2px solid var(--primary-color);
 }
+.hide {
+  display: none;
+}
 /* End utility classes */
 
 /* Cart icon styles */
@@ -268,6 +271,13 @@ button {
   grid-column: 3;
 }
 
+.cart-footer {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: right;
+  font-weight: bold;
+}
+
 /* Start cart card x icon styling */
 
 .remove-from-cart {
@@ -287,7 +297,6 @@ button {
 .remove-from-cart:hover {
   color: darkred;
 }
-
 
 @media screen and (min-width: 500px) {
   body {
