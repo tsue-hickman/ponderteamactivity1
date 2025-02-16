@@ -4,6 +4,8 @@ import { renderListWithTemplate } from "./utils.mjs";
 export function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
   const productList = document.querySelector(".product-list");
+  const cartFooter = document.querySelector(".cart-footer");
+  const cartTotal = document.querySelector('#cart-total');
 
   if (cartItems.length === 0) {
     productList.innerHTML =
@@ -18,6 +20,11 @@ export function renderCartContents() {
         removeProductFromCart(itemId);
       })
     })
+
+    const totalPrice = cartItems.reduce((total, item) => total + item.FinalPrice, 0);
+    cartTotal.textContent = totalPrice.toFixed(2);
+
+    cartFooter.classList.remove("hide");
   }
 }
 
