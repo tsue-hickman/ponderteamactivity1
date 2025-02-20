@@ -9,18 +9,18 @@ function calculateDiscount(originalPrice, finalPrice) {
 
 function productCardTemplate(product) {
   const discount = calculateDiscount(product.SuggestedRetailPrice, product.FinalPrice);
-  const discountTag = discount > 0 ? `<p class="discount-tag">${discount}% Off</p>` : "";
+  const discountTag = discount > 0 ? "<p class=\"discount-tag\">" + discount + "% Off</p>" : "";
 
-  return `<li class="product-card">
-    <a href="product_pages/index.html?product=${product.Id}">
-      <img src="${product.Image}" alt="Image of ${product.Name}" />
-      ${discountTag}
-      <h3 class="card__brand">${product.Brand.Name}</h3>
-      <h2 class="card__name">${product.Name}</h2>
-      <p class="product-card__price">$${product.FinalPrice}</p>
-      ${discount > 0 ? `<p class="original-price">$${product.SuggestedRetailPrice}</p>` : ""}
-    </a>
-  </li>`;
+  return "<li class=\"product-card\">" +
+    "<a href=\"product_pages/index.html?product=" + product.Id + "\">" +
+      "<img src=\"" + product.Image + "\" alt=\"Image of " + product.Name + "\" />" +
+      discountTag +
+      "<h3 class=\"card__brand\">" + product.Brand.Name + "</h3>" +
+      "<h2 class=\"card__name\">" + product.Name + "</h2>" +
+      "<p class=\"product-card__price\">$" + product.FinalPrice + "</p>" +
+      (discount > 0 ? "<p class=\"original-price\">$" + product.SuggestedRetailPrice + "</p>" : "") +
+    "</a>" +
+  "</li>";
 }
 
 function getTopFourTents(products) {
@@ -29,17 +29,17 @@ function getTopFourTents(products) {
 
 export default async function productList(selector, category = null) {
   try {
-    // Get category from URL parameters if not provided
-    if (!category) {
-      const params = new URLSearchParams(window.location.search);
-      category = params.get("category") || "defaultCategory"; // Provide a fallback if needed
-    }
+    // Use a new variable instead of reassigning category
+    const effectiveCategory = category || (new URLSearchParams(window.location.search).get("category") || "defaultCategory");
 
-    const products = await getData(category);
+    const products = await getData(effectiveCategory);
     const topFourTents = getTopFourTents(products);
     const productContainer = document.querySelector(selector);
     renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
   } catch (error) {
-    // console.error("Error fetching products:", error);
+    const productContainer = document.querySelector(selector);
+    if (productContainer) {
+      productContainer.innerHTML = "<p>Sorry, we couldn't load the products. Please try again later.</p>";
+    }
   }
 }
