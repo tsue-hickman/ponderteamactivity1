@@ -152,6 +152,18 @@ button {
   list-style-type: none;
   padding: 0;
 }
+/* Sorting Controls */
+.sorting-controls {
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
+
+.sorting-controls select {
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 4px;
+}
+
 .product-list a {
   text-decoration: none;
   color: var(--dark-grey);
