@@ -71,7 +71,7 @@ async function loadAlerts() {
     const mainContent = document.querySelector("main");
     mainContent.insertBefore(alertContainer, mainContent.firstChild);
   } catch (err) {
-    // No console.log 
+    // No console.log
   }
 }
 
@@ -80,7 +80,7 @@ function addProductToCart() {
   if (!Array.isArray(cartItems)) {
     cartItems = [];
   }
-  cartItems.push(product);
+  cartItems.push(product); // Use global product instead of prodToAdd
   setLocalStorage("so-cart", cartItems);
 }
 
@@ -88,13 +88,12 @@ export async function productDetails(productId) {
   try {
     await loadAlerts();
     
-    // Assign to the global product variable
     product = await findProductById(productId);
     renderProductDetails();
     
     document.getElementById("addToCart")
       .addEventListener("click", addProductToCart);
   } catch (err) {
-    // No console.log 
+    // No console.log
   }
-}
+} 

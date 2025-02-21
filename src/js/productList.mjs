@@ -27,15 +27,39 @@ function getTopFourTents(products) {
   return products.slice(0, 4);
 }
 
+function addNewsletterSignup() {
+  const footer = document.querySelector("footer");
+  if (footer) {
+    const signup = document.createElement("div");
+    signup.className = "newsletter-signup";
+    signup.innerHTML = 
+      "<h3>Subscribe to Our Newsletter</h3>" +
+      "<form id=\"newsletter-form\">" +
+        "<input type=\"email\" placeholder=\"Enter your email\" required>" +
+        "<button type=\"submit\">Subscribe</button>" +
+      "</form>";
+    footer.appendChild(signup);
+
+    const form = signup.querySelector("#newsletter-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = form.querySelector("input").value;
+      localStorage.setItem("newsletter-email", email);
+      form.innerHTML = "<p>Thanks for subscribing!</p>";
+    });
+  }
+}
+
 export default async function productList(selector, category = null) {
   try {
-    // Use a new variable instead of reassigning category
     const effectiveCategory = category || (new URLSearchParams(window.location.search).get("category") || "defaultCategory");
 
     const products = await getData(effectiveCategory);
     const topFourTents = getTopFourTents(products);
     const productContainer = document.querySelector(selector);
     renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
+
+    addNewsletterSignup();
   } catch (error) {
     const productContainer = document.querySelector(selector);
     if (productContainer) {
