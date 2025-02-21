@@ -1,86 +1,69 @@
-import { findProductById } from "./productData.mjs";
-import { setLocalStorage, getLocalStorage } from "./utils.mjs";
+import { getData } from "../js/productData.mjs";
+import { renderListWithTemplate } from "../js/utils.mjs";
 
-// Declare product globally without initialization
-let product;
+function calculateDiscount(originalPrice, finalPrice) {
+  if (!originalPrice || !finalPrice) return 0;
+  const discount = ((originalPrice - finalPrice) / originalPrice) * 100;
+  return Math.round(discount);
+}
 
-function calculateDiscount(prod) {
-  if (prod.SuggestedRetailPrice && prod.FinalPrice) {
-    const suggestedPrice = parseFloat(prod.SuggestedRetailPrice);
-    const finalPrice = parseFloat(prod.FinalPrice);
-    if (suggestedPrice > finalPrice) {
-      const discount = ((suggestedPrice - finalPrice) / suggestedPrice) * 100;
-      return Math.round(discount);
+function productCardTemplate(product) {
+  const discount = calculateDiscount(product.SuggestedRetailPrice, product.FinalPrice);
+  const discountTag = discount > 0 ? "<p class=\"discount-tag\">" + discount + "% Off</p>" : "";
+
+  return "<li class=\"product-card\">" +
+    "<a href=\"product_pages/index.html?product=" + product.Id + "\">" +
+      "<img src=\"" + product.Image + "\" alt=\"Image of " + product.Name + "\" />" +
+      discountTag +
+      "<h3 class=\"card__brand\">" + product.Brand.Name + "</h3>" +
+      "<h2 class=\"card__name\">" + product.Name + "</h2>" +
+      "<p class=\"product-card__price\">$" + product.FinalPrice + "</p>" +
+      (discount > 0 ? "<p class=\"original-price\">$" + product.SuggestedRetailPrice + "</p>" : "") +
+    "</a>" +
+  "</li>";
+}
+
+function getTopFourTents(products) {
+  return products.slice(0, 4);
+}
+
+function addNewsletterSignup() {
+  const footer = document.querySelector("footer");
+  if (footer) {
+    const signup = document.createElement("div");
+    signup.className = "newsletter-signup";
+    signup.innerHTML = 
+      "<h3>Subscribe to Our Newsletter</h3>" +
+      "<form id=\"newsletter-form\">" +
+        "<input type=\"email\" placeholder=\"Enter your email\" required>" +
+        "<button type=\"submit\">Subscribe</button>" +
+      "</form>";
+    footer.appendChild(signup);
+
+    const form = signup.querySelector("#newsletter-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = form.querySelector("input").value;
+      localStorage.setItem("newsletter-email", email); // Placeholder for real logic
+      form.innerHTML = "<p>Thanks for subscribing!</p>";
+    });
+  }
+}
+
+export default async function productList(selector, category = null) {
+  try {
+    const effectiveCategory = category || (new URLSearchParams(window.location.search).get("category") || "defaultCategory");
+
+    const products = await getData(effectiveCategory);
+    const topFourTents = getTopFourTents(products);
+    const productContainer = document.querySelector(selector);
+    renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
+
+    addNewsletterSignup(); // Added here for this branch
+  } catch (error) {
+    const productContainer = document.querySelector(selector);
+    if (productContainer) {
+      productContainer.innerHTML = "<p>Sorry, we couldn't load the products. Please try again later.</p>";
     }
-  }
-  return 0;
-}
-
-function formatPrice(price) {
-  return "$" + parseFloat(price).toFixed(2);
-}
-
-function renderProductDetails() {
-  document.getElementById("productName").innerText = product.Brand.Name;
-  document.getElementById("productNameWithoutBrand").innerText = product.NameWithoutBrand;
-  document.getElementById("productImage").src = product.Image;
-  document.getElementById("productImage").alt = product.Name;
-
-  const discount = calculateDiscount(product);
-  const priceDisplay = document.getElementById("productFinalPrice");
-  priceDisplay.innerHTML = 
-    (discount > 0 ? "<span class=\"discount-tag\">-" + discount + "%</span>" : "") +
-    "<span class=\"current-price\">" + formatPrice(product.FinalPrice) + "</span>" +
-    (discount > 0 ? "<span class=\"original-price\">" + formatPrice(product.SuggestedRetailPrice) + "</span>" : "");
-
-  document.getElementById("productColorName").innerText = product.Colors[0].ColorName;
-  document.getElementById("productDescriptionHtmlSimple").innerHTML = product.DescriptionHtmlSimple;
-  document.getElementById("addToCart").dataset.id = product.Id;
-}
-
-async function loadAlerts() {
-  try {
-    const response = await fetch("../json/alerts.json");
-    const data = await response.json();
-    const alertContainer = document.createElement("div");
-    alertContainer.className = "alert-container";
-
-    data.alerts
-      .filter(alert => alert.active)
-      .forEach(alert => {
-        const alertElement = document.createElement("div");
-        alertElement.className = "alert";
-        alertElement.textContent = alert.message;
-        alertElement.style.backgroundColor = alert.background;
-        alertElement.style.color = alert.color;
-        alertContainer.appendChild(alertElement);
-      });
-
-    const mainContent = document.querySelector("main");
-    mainContent.insertBefore(alertContainer, mainContent.firstChild);
-  } catch (err) {
-    // No console.log per your rules
-  }
-}
-
-function addProductToCart(prodToAdd) {
-  let cartItems = getLocalStorage("so-cart") || [];
-  if (!Array.isArray(cartItems)) {
-    cartItems = [];
-  }
-  cartItems.push(prodToAdd);
-  setLocalStorage("so-cart", cartItems);
-}
-
-export async function productDetails(productId) {
-  try {
-    await loadAlerts();
-    product = await findProductById(productId);
-    renderProductDetails();
-    
-    document.getElementById("addToCart")
-      .addEventListener("click", () => addProductToCart(product));
-  } catch (err) {
-    // No console.log per your rules
   }
 }
