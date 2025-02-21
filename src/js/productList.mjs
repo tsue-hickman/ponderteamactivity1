@@ -86,6 +86,42 @@ function addNewsletterSignup() {
   }
 }
 
+function showCTABanner() {
+  const hasVisited = getLocalStorage("has-visited");
+  if (!hasVisited) {
+    const banner = document.createElement("div");
+    banner.className = "cta-banner";
+    banner.innerHTML = 
+      "<div class=\"cta-content\">" +
+        "<h2>Welcome to Our Site!</h2>" +
+        "<p>Register now for a chance to win a $100 gift card in our monthly giveaway!</p>" +
+        "<button class=\"cta-register\">Register Now</button>" +
+        "<span class=\"cta-close\">×</span>" +
+      "</div>";
+
+    document.body.appendChild(banner);
+
+    const closeBtn = banner.querySelector(".cta-close");
+    closeBtn.addEventListener("click", () => {
+      banner.remove();
+      setLocalStorage("has-visited", true);
+    });
+
+    const registerBtn = banner.querySelector(".cta-register");
+    registerBtn.addEventListener("click", () => {
+      window.location.href = "/register.html";
+      setLocalStorage("has-visited", true);
+    });
+
+    banner.addEventListener("click", (e) => {
+      if (e.target === banner) {
+        banner.remove();
+        setLocalStorage("has-visited", true);
+      }
+    });
+  }
+}
+
 export default async function productList(selector, category = null) {
   try {
     const effectiveCategory = category || (new URLSearchParams(window.location.search).get("category") || "defaultCategory");
@@ -96,6 +132,7 @@ export default async function productList(selector, category = null) {
     renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
 
     addNewsletterSignup();
+    showCTABanner();
 
     const quickViewButtons = document.querySelectorAll(".quick-view-btn");
     quickViewButtons.forEach(button => {
