@@ -1,10 +1,11 @@
 import { findProductById } from "./productData.mjs";
 import { setLocalStorage, getLocalStorage } from "./utils.mjs";
 
-// Declare product globally once
-let product = null;
+// Declare product globally without initialization
+// eslint-disable-next-line no-redeclare
+let product;
 
-function calculateDiscount(prod) {
+export function calculateDiscount(prod) {
   if (prod.SuggestedRetailPrice && prod.FinalPrice) {
     const suggestedPrice = parseFloat(prod.SuggestedRetailPrice);
     const finalPrice = parseFloat(prod.FinalPrice);
@@ -16,7 +17,7 @@ function calculateDiscount(prod) {
   return 0;
 }
 
-function formatPrice(price) {
+export function formatPrice(price) {
   return "$" + parseFloat(price).toFixed(2);
 }
 
@@ -80,14 +81,13 @@ function addProductToCart() {
   if (!Array.isArray(cartItems)) {
     cartItems = [];
   }
-  cartItems.push(product); // Use global product instead of prodToAdd
+  cartItems.push(product);
   setLocalStorage("so-cart", cartItems);
 }
 
 export async function productDetails(productId) {
   try {
     await loadAlerts();
-    
     product = await findProductById(productId);
     renderProductDetails();
     
@@ -96,4 +96,4 @@ export async function productDetails(productId) {
   } catch (err) {
     // No console.log
   }
-} 
+}
