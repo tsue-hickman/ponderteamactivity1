@@ -21,8 +21,42 @@ function productCardTemplate(product) {
   "</li>";
 }
 
-function getTopFourTents(products) {
-  return products.slice(0, 4);
+function sortProducts(products, sortBy) {
+  return [...products].sort((a, b) => {
+    if (sortBy === "name") {
+      return a.Name.localeCompare(b.Name);
+    } else if (sortBy === "price") {
+      return parseFloat(a.FinalPrice) - parseFloat(b.FinalPrice);
+    }
+    return 0;
+  });
+}
+
+function addSortingControls(container, products, renderFunction) {
+  const sortingDiv = document.createElement("div");
+  sortingDiv.className = "sorting-controls";
+  sortingDiv.innerHTML = 
+    "<label for=\"sort-select\">Sort by:</label>" +
+    "<select id=\"sort-select\">" +
+      "<option value=\"default\">Default</option>" +
+      "<option value=\"name\">Name</option>" +
+      "<option value=\"price\">Price</option>" +
+    "</select>";
+
+  container.parentNode.insertBefore(sortingDiv, container);
+
+  document.getElementById("sort-select").addEventListener("change", (e) => {
+    const sortBy = e.target.value;
+    const sortedProducts = sortBy === "default" 
+      ? products 
+      : sortProducts(products, sortBy);
+    renderFunction(sortedProducts);
+  });
+}
+
+function renderProducts(products, container) {
+  container.innerHTML = "";
+  renderListWithTemplate(productCardTemplate, container, products);
 }
 
 function showQuickViewModal(prod) {
@@ -122,14 +156,23 @@ function showCTABanner() {
   }
 }
 
-export default async function productList(selector, category = null) {
+export default async function productList(selector, categoryParam = null) {
   try {
-    const effectiveCategory = category || (new URLSearchParams(window.location.search).get("category") || "defaultCategory");
+    let categoryToUse = categoryParam;
+    if (!categoryToUse) {
+      const params = new URLSearchParams(window.location.search);
+      categoryToUse = params.get("category") || "defaultCategory";
+    }
 
-    const products = await getData(effectiveCategory);
-    const topFourTents = getTopFourTents(products);
     const productContainer = document.querySelector(selector);
-    renderListWithTemplate(productCardTemplate, productContainer, topFourTents);
+    const products = await getData(categoryToUse);
+
+    renderProducts(products, productContainer);
+    addSortingControls(
+      productContainer, 
+      products, 
+      (sortedProducts) => renderProducts(sortedProducts, productContainer)
+    );
 
     addNewsletterSignup();
     showCTABanner();
@@ -142,6 +185,7 @@ export default async function productList(selector, category = null) {
         showQuickViewModal(prod);
       });
     });
+
   } catch (error) {
     const productContainer = document.querySelector(selector);
     if (productContainer) {
