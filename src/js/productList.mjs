@@ -1,6 +1,6 @@
-import { getData } from "../js/productData.mjs";
+import { getProductsByCategory } from "../js/externalServices.mjs";
 import { renderListWithTemplate } from "../js/utils.mjs";
-import { findProductById } from "../js/productData.mjs";
+import { findProductById } from "../js/externalServices.mjs";
 import { calculateDiscount, formatPrice } from "../js/productDetails.mjs";
 import { setLocalStorage, getLocalStorage } from "../js/utils.mjs";
 
@@ -165,7 +165,7 @@ export default async function productList(selector, categoryParam = null) {
     }
 
     const productContainer = document.querySelector(selector);
-    const products = await getData(categoryToUse);
+    const products = await getProductsByCategory(categoryToUse);
 
     renderProducts(products, productContainer);
     addSortingControls(
