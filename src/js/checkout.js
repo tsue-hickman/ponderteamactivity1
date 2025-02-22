@@ -9,6 +9,12 @@ window.addEventListener("DOMContentLoaded", () => {
   checkoutProcess.init("so-cart", "#order-summary");
 });
 
+document.forms["checkout-form"].addEventListener("submit", (e) => {
+  e.preventDefault();
+  // e.target would contain our form in this case
+  checkoutProcess.checkout(e.target);
+});
+
 function setupFormValidation() {
   const form = document.getElementById("checkout-form");
 

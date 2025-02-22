@@ -1,4 +1,5 @@
 import { getLocalStorage } from "./utils.mjs";
+import { checkout } from "./externalServices.mjs"
 
 const checkoutProcess = {
     key: "",
@@ -72,7 +73,48 @@ const checkoutProcess = {
                 <p><strong>Order Total: $${this.orderTotal.toFixed(2)}</strong></p>
             `;
         }
+    },
+
+    checkout: async function (form) {
+        const json = formDataToJSON(form);
+
+        json.orderDate = new Date();
+        json.orderTotal = this.orderTotal;
+        json.tax = this.tax;
+        json.shipping = this.shipping;
+
+        json.items = packageItems(this.list);
+        console.log(json);
+        
+        try {
+            const res = await checkout(json);
+            console.log(res);
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
+
+export function packageItems(items) {
+    return items.map(item => ({
+        id: item.Id, // Adjust based on your cart structure
+        name: item.Name,
+        price: item.FinalPrice,
+        quantity: item.quantity
+    }));
+}
+
+function formDataToJSON(formElement) {
+    const formData = new FormData(formElement),
+        convertedJSON = {};
+
+    formData.forEach(function (value, key) {
+        convertedJSON[key] = value;
+    });
+
+    return convertedJSON;
+}
+
+
 
 export default checkoutProcess;
