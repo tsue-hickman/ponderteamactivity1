@@ -1,5 +1,6 @@
 import { findProductById } from "./externalServices.mjs";
 import { setLocalStorage, getLocalStorage } from "./utils.mjs";
+import { updateCartCount } from "./cartAnimation.mjs";
 
 let productDetail; // Using productDetail consistently
 
@@ -82,8 +83,18 @@ function addProductToCart() {
   if (!Array.isArray(cartItems)) {
     cartItems = [];
   }
-  cartItems.push(productDetail); // Use productDetail here
+
+  let existingProduct = cartItems.find(item => item.Id === productDetail.Id);
+
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cartItems.push({ ...productDetail, quantity: 1});
+  }
+  
   setLocalStorage("so-cart", cartItems);
+
+  updateCartCount();
 }
 
 export async function productDetails(productId) {

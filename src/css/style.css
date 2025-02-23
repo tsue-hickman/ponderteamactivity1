@@ -133,6 +133,23 @@ button {
   animation: shake 0.4s ease-in-out;
 }
 
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden; /* Hide if empty */
+}
+
 /* End cart icon styles */
 
 .mission {
