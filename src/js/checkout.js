@@ -1,27 +1,26 @@
-//checkout.js
 import { loadHeaderFooter } from "./utils.mjs";
 import checkoutProcess from "./checkoutProcess.mjs";
 
-// Call the productList function when the page loads
+// Initialize page when DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
   loadHeaderFooter();
-  setupFormValidation();
   checkoutProcess.init("so-cart", "#order-summary");
-});
-
-document.forms["checkout-form"].addEventListener("submit", (e) => {
-  e.preventDefault();
-  // e.target would contain our form in this case
-  checkoutProcess.checkout(e.target);
+  setupFormValidation();
 });
 
 function setupFormValidation() {
   const form = document.getElementById("checkout-form");
+  if (!form) {
+    // console.error("Checkout form not found!");
+    return;
+  }
 
-  form.addEventListener("submit", (event) => {
-    if (!form.checkValidity()) {
-      event.preventDefault();
-      alert("Please fill out all fields correctly before submitting.");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault(); // Prevent default form submission for AJAX handling
+    const isValid = form.checkValidity();
+    form.reportValidity(); // Display browser-native validation messages
+    if (isValid) {
+      checkoutProcess.checkout(form); // This now handles success internally
     }
   });
 }

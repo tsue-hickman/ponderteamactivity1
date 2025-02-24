@@ -226,10 +226,24 @@ button {
 }
 
 .alert {
-  padding: 1em;
-  margin: 0.5em 0;
+  background-color: #f8d7da; /* Light red background */
+  color: #721c24; /* Dark red text */
+  padding: 1rem;
+  border: 1px solid #f5c6cb;
   border-radius: 4px;
+  margin: 0.5em 0 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   text-align: center;
+}
+
+.alert .close-alert {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #721c24;
 }
 
 /* Styles for product lists */
@@ -364,7 +378,8 @@ legend {
   font-weight: bold;
 }
 
-input, select {
+input,
+select {
   display: block;
   width: 100%;
   padding: 8px;
@@ -394,7 +409,6 @@ button:hover {
 .order-summary {
   margin: 20px;
 }
-
 
 /* Start cart card x icon styling */
 
