@@ -1,3 +1,5 @@
+// utils.mjs
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
@@ -17,6 +19,11 @@ export function setLocalStorage(key, data) {
   // }
   // existingCart.push(data);
   // localStorage.setItem(key, JSON.stringify(existingCart));
+}
+
+// clear data from local storage
+export function clearLocalStorage(key) {
+  localStorage.removeItem(key);
 }
 
 // set a listener for both touchend and click
@@ -43,7 +50,6 @@ export function renderListWithTemplate(templateFn, parentElement, list, position
   const htmlStrings = list.map(templateFn); // Generate HTML for each item using the template function
   parentElement.insertAdjacentHTML(position, htmlStrings.join("")); // Insert the HTML into the DOM
 }
-
 
 export function renderWithTemplate(template, parentElement, list, position = "afterbegin", clear = true) {
   if (clear) {
@@ -87,5 +93,36 @@ export async function loadHeaderFooter() {
     footer.innerHTML = footerHTML;
   } else {
     console.error("Footer not found in DOM or is empty.");
+  }
+}
+
+// Custom alert message function for non-intrusive notifications
+export function alertMessage(message, scroll = true) {
+  // Create element to hold the alert
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+
+  // Set the contents (message and close button)
+  alert.innerHTML = `
+    <span>${message}</span>
+    <button class="close-alert">×</button>
+  `;
+
+  // Add event listener to close the alert when X is clicked
+  alert.addEventListener("click", function (e) {
+    if (e.target.classList.contains("close-alert")) {
+      alert.remove();
+    }
+  });
+
+  // Add the alert to the top of the main element
+  const main = document.querySelector("main");
+  if (main) {
+    main.prepend(alert);
+  }
+
+  // Scroll to the top if needed
+  if (scroll) {
+    window.scrollTo(0, 0);
   }
 }
