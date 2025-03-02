@@ -5,5 +5,5 @@ import { updateCartCount } from "./cartAnimation.mjs";
 document.addEventListener("DOMContentLoaded", renderCartContents);
 
 loadHeaderFooter().then(() => {
-    updateCartCount();
-  });
+  updateCartCount();
+});
