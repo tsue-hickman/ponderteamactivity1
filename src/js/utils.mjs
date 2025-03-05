@@ -77,8 +77,8 @@ export async function loadHeaderFooter() {
   const headerHTML = await loadTemplate("/partials/header.html");
   const footerHTML = await loadTemplate("/partials/footer.html");
 
-  console.log("Header HTML:", headerHTML); // Debugging
-  console.log("Footer HTML:", footerHTML); // Debugging
+  // console.log("Header HTML:", headerHTML); // Debugging
+  // console.log("Footer HTML:", footerHTML); // Debugging
 
   const header = document.getElementById("header");
   const footer = document.getElementById("footer");
@@ -92,7 +92,7 @@ export async function loadHeaderFooter() {
   if (footer && footerHTML.trim()) {
     footer.innerHTML = footerHTML;
   } else {
-    console.error("Footer not found in DOM or is empty.");
+    // console.error("Footer not found in DOM or is empty.");
   }
 }
 
