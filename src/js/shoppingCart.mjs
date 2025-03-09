@@ -21,6 +21,14 @@ export function renderCartContents() {
       })
     })
 
+    document.querySelectorAll(".quantity-dropdown").forEach(select => {
+      select.addEventListener("change", (event) => {
+        const itemId = event.target.dataset.id;
+        const newQuantity = parseInt(event.target.value, 10);
+        updateProductQuantity(itemId, newQuantity);
+      });
+    });
+
     const totalPrice = cartItems.reduce((total, item) => total + item.FinalPrice, 0);
     cartTotal.textContent = totalPrice.toFixed(2);
 
@@ -29,7 +37,10 @@ export function renderCartContents() {
 }
 
 function cartItemTemplate(item) {
-  console.log(item);
+
+  const quantityOptions = Array.from({ length: 10 }, (_, i) => i + 1).map(num => {
+    return `<option value="${num}" ${num === item.quantity ? "selected" : ""}>${num}</option>`;
+  }).join("");
 
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
@@ -42,6 +53,9 @@ function cartItemTemplate(item) {
     <h2 class="card__name">${item.Name}</h2>
   </a>
   <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+  <select class="quantity-dropdown" data-id="${item.Id}">
+    ${quantityOptions}
+  </select>
   <p class="cart-card__quantity">${item.quantity}</p>
   <p class="cart-card__price">$${item.FinalPrice}</p>
   <span class="remove-from-cart" data-id="${item.Id}">&times;</span>
