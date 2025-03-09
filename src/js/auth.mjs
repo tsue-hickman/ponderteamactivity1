@@ -1,5 +1,6 @@
 import { getLocalStorage, setLocalStorage, getParam } from "./utils.mjs";
 import { loginRequest } from "./externalServices.mjs";
+import { jwtDecode } from "jwt-decode";
 
 const TOKEN_KEY = "so-token";
 
@@ -27,17 +28,38 @@ export async function login(creds, redirect) {
  */
 
 export function isTokenValid() {
-  return !!getLocalStorage(TOKEN_KEY);
+  const token = getLocalStorage(TOKEN_KEY);
+  if (!token) return false;
+
+  try {
+    const decoded = jwt_decode(token);
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+
+    if (decoded.exp < now) {
+      console.warn("Token expired.");
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error("Invalid token:", error);
+    return false;
+  };
 }
 
 /**
  * Checks if the user is logged in. If not, redirects to the login page.
  */
 export function checkLogin() {
-    if (!isTokenValid()) {
-        const currentPage = window.location.href;
-        window.location.href = `/login.html?redirect=${encodeURIComponent(currentPage)}`;
-    }
+  const token = getLocalStorage(TOKEN_KEY);
+
+  if (!isTokenValid()) {
+    localStorage.removeItem(TOKEN_KEY); // Clear invalid token
+    const currentPage = window.location.href;
+    window.location.href = `/login.html?redirect=${encodeURIComponent(currentPage)}`;
+    return null;
+  }
+
+  return token;
 }
 
 /**
