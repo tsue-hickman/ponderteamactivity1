@@ -1,4 +1,9 @@
+import { getLocalStorage } from "./utils.mjs";
+
 const baseURL = import.meta.env.VITE_SERVER_URL; 
+
+const BASE_URL = "http://server-nodejs.cit.byui.edu:3000";
+
 function convertToJson(res) {
   if (res.ok) {
     return res.json();
@@ -51,5 +56,31 @@ export async function loginRequest(creds) {
   } catch (error) {
     console.error("Login failed:", error);
     throw error; // Propagate the error to be handled by the calling function
+  }
+}
+
+export async function getOrders() {
+  const token = getLocalStorage("so_token");
+  if (!token) {
+    console.error("No auth token found. User must be logged in.");
+    return [];
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/orders`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch orders: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error retrieving orders:", error);
+    return [];
   }
 }
